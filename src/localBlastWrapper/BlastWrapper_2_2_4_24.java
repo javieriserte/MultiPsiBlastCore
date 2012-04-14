@@ -3,17 +3,20 @@ package localBlastWrapper;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import commandIO.RunCommand;
 
 public class BlastWrapper_2_2_4_24 extends BlastWrapper{
 
 
-	public String makeBlastn(String queryFile, String dbFile, String task, String otherOptions) {
+	public List<BlastResult> makeBlastn(String queryFile, String dbFile, String task, String otherOptions) {
 		return this.runProgram("blastn", queryFile, dbFile, task, otherOptions);
 	}
 
-	public String makeBlastp(String queryFile, String dbFile, String task, String otherOptions) {
+	public List<BlastResult> makeBlastp(String queryFile, String dbFile, String task, String otherOptions) {
 		return this.runProgram("blastp", queryFile, dbFile, task, otherOptions);
 	}
 
@@ -38,9 +41,7 @@ public class BlastWrapper_2_2_4_24 extends BlastWrapper{
 		String dbFile = "c:\\javier\\bioinfo\\ac78";
 		BlastWrapper_2_2_4_24 bw = new BlastWrapper_2_2_4_24();
 		bw.setBaseProgramsPath("c:\\javier\\bioinfo\\blast-2.2.24+\\bin\\");
-//		System.out.println(bw.getBaseProgramsPath());
 		System.out.println(bw.makeBlastp(queryFile, dbFile, "blastp", "-outfmt 6"));		
-//		System.out.println(File.separator);
 		
 		/*
 		 *  qseqid means Query Seq-id
@@ -81,7 +82,7 @@ public class BlastWrapper_2_2_4_24 extends BlastWrapper{
 	/////////////////////////////
 	// Private methods
 	
-	private String runProgram(String progranName, String queryFile, String dbFile, String task, String otherOptions) {
+	private List<BlastResult> runProgram(String progranName, String queryFile, String dbFile, String task, String otherOptions) {
 		BufferedWriter stdin = null;
 		BufferedReader stderr = null;
 		
@@ -98,7 +99,38 @@ public class BlastWrapper_2_2_4_24 extends BlastWrapper{
 			e.printStackTrace();
 		}
 		
-		return result.toString();
+		return this.parseResult(result.toString());
+	}
+	
+	private List<BlastResult> parseResult(String result) {
+		List<BlastResult> r = new ArrayList<BlastResult>();
+		
+		BufferedReader br = new BufferedReader(new StringReader(result));
+		String line;
+		try {
+			while ( (line = br.readLine()) != null) {
+				String[] pr = line.split("\t");
+				BlastResult res = new BlastResult(
+						pr[0], 
+						pr[1], 
+						Double.valueOf(pr[2]), 
+						Integer.valueOf(pr[3]), 
+						Integer.valueOf(pr[4]), 
+						Integer.valueOf(pr[5]), 
+						Integer.valueOf(pr[6]), 
+						Integer.valueOf(pr[7]), 
+						Integer.valueOf(pr[8]), 
+						Integer.valueOf(pr[9]), 
+						Double.valueOf(pr[10]), 
+						Double.valueOf(pr[11]), 
+						pr[12], 
+						pr[13] 
+						);
+				r.add(res);
+			}
+		} catch (IOException e) { e.printStackTrace(); }
+		return r;
+		
 	}
 
 }
