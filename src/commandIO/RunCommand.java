@@ -36,6 +36,7 @@ public class RunCommand {
 		} 
 
 	public static BufferedReader runCommand(String command, BufferedWriter out, BufferedReader err) {
+		System.out.println(command);
 		BufferedReader in =null;
 		try {
 			Process p=Runtime.getRuntime().exec(command);

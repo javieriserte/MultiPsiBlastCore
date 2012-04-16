@@ -1,6 +1,6 @@
 package localBlastWrapper;
 
-public class BlastResult {
+public class BlastResult implements Cloneable{
 	private String qseqid;
 	private String sseqid;
 	private double pident;
@@ -41,12 +41,49 @@ public class BlastResult {
 		this.sseq = sseq;
 	}
 	
+	/////////////////////////
+	// Public interface
+	
+	@Override
+	public String toString() {
+		return "BlastResult [qseqid=" + qseqid + ", sseqid=" + sseqid
+				+ ", pident=" + pident + ", length=" + length + ", mismatch="
+				+ mismatch + ", gapopen=" + gapopen + ", qstart=" + qstart
+				+ ", qend=" + qend + ", sstart=" + sstart + ", send=" + send
+				+ ", evalue=" + evalue + ", bitscore=" + bitscore + ", qseq="
+				+ qseq + ", sseq=" + sseq + "]";
+	}
+	
+	@Override 
+	public Object clone() {
+		return new BlastResult(
+				this.qseqid,
+				this.sseqid,
+				this.pident,
+				this.length,
+				this.mismatch,
+				this.gapopen,
+				this.qstart,
+				this.qend,
+				this.sstart,
+				this.send,
+				this.evalue,
+				this.bitscore,
+				this.qseq,
+				this.sseq
+		);
+		
+		
+	}
+	
 	////////////////////////
 	// Getters and Setters
 	
 	public String getQseqid() {
 		return qseqid;
 	}
+
+
 	public void setQseqid(String qseqid) {
 		this.qseqid = qseqid;
 	}
