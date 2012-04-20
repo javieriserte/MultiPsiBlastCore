@@ -2,6 +2,7 @@ package localBlastWrapper;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -31,10 +32,15 @@ public class BlastWrapper_2_2_4_24 extends BlastWrapper{
 				               " " +otherOptions));
 	}
 
-
 	public String maketBlastn(String queryFile, String dbFile, String otherOptions) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public void makeProteinBlastdb(String inFile, File out, String otherOptions) {
+		BufferedWriter stdin = null;
+		BufferedReader stderr = null;
+		RunCommand.runCommand(this.getBaseProgramsPath() + "makeblastdb -in "+inFile+" -dbtype prot -out "+ out + otherOptions, stdin, stderr);
 	}
 	
 	public static void main(String[] args) {

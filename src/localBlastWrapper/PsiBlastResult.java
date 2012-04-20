@@ -26,6 +26,9 @@ public class PsiBlastResult {
 		return result;
 	}
 	
+	public List<BlastResult> getLastIteration() {
+		return this.getIteration(this.getNum_iterations()-1);
+	}
 	///////////////////////
 	// getters and setters
 	
