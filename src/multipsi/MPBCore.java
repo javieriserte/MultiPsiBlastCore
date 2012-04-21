@@ -8,8 +8,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -183,7 +181,7 @@ try {		mpb.multiPsiBlastStartingWith(pair.getKey(), pair.getValue(), outDB);    
 					Set<String> result = null;
 					String currentProteinCode = it.next();
 
-					this.printResults(genomeCode, currentProteinCode, "MultiPsiBlast Starting With: " + genomeCode, false);
+					this.printResults(genomeCode, currentProteinCode, "MultiPsiBlast Starting With: " + genomeCode, true);
 
 					
 					for(double ev: eValues) {
@@ -191,15 +189,16 @@ try {		mpb.multiPsiBlastStartingWith(pair.getKey(), pair.getValue(), outDB);    
 					
 							result = this.multiPsiBlastProtein(currentProteinCode, proteome, outDB, ev, evt);
 
-							this.printResults(genomeCode, currentProteinCode, "\tWith Protein: " + currentProteinCode + " evalue: " + Double.valueOf(ev) + " evalue Threshold: " + Double.valueOf(evt), true);
+							StringBuilder outtext = new StringBuilder();
 							
-							this.printResults(genomeCode, currentProteinCode, "\tFound: " + result.size() + " elements", true);
+							outtext.append("\tWith Protein: " + currentProteinCode + " evalue: " + Double.valueOf(ev) + " evalue Threshold: " + Double.valueOf(evt));
+							outtext.append(" Found: " + result.size() + " elements");
+							outtext.append(": " + result.toString());
 							
-							System.out.println("\tWith: " + currentProteinCode + " evalue: " + Double.valueOf(ev) + " evalue Threshold: " + Double.valueOf(evt) + " found "  + result.size() + " elements" );
-
-					
-							for (String i: result)
-								this.printResults(genomeCode, currentProteinCode, "\t\t" + i, true);
+							System.out.println(outtext.toString() );
+							
+							this.printResults(genomeCode, currentProteinCode, outtext.toString(), true);
+							
 						}
 					}
 				}

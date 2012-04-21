@@ -35,15 +35,18 @@ public class RunCommand {
 		System.out.println("Done"); 
 		} 
 
-	public static BufferedReader runCommand(String command, BufferedWriter out, BufferedReader err) {
+	public static BufferedReader runCommand(String command, BufferedWriter out, BufferedReader err, boolean wait) {
 		BufferedReader in =null;
 		try {
 			Process p=Runtime.getRuntime().exec(command);
 			out = new BufferedWriter(new OutputStreamWriter(p.getOutputStream()));
 			err = new BufferedReader(new InputStreamReader (p.getErrorStream ()));
 			in  = new BufferedReader(new InputStreamReader (p.getInputStream ()));
+			if(wait) p.waitFor(); 
 			
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		

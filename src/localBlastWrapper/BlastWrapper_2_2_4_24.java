@@ -40,7 +40,7 @@ public class BlastWrapper_2_2_4_24 extends BlastWrapper{
 	public void makeProteinBlastdb(String inFile, File out, String otherOptions) {
 		BufferedWriter stdin = null;
 		BufferedReader stderr = null;
-		RunCommand.runCommand(this.getBaseProgramsPath() + "makeblastdb -in "+inFile+" -dbtype prot -out "+ out + otherOptions, stdin, stderr);
+		RunCommand.runCommand(this.getBaseProgramsPath() + "makeblastdb -in "+inFile+" -dbtype prot -out "+ out + otherOptions, stdin, stderr, true);
 	}
 	
 	public static void main(String[] args) {
@@ -107,7 +107,7 @@ public class BlastWrapper_2_2_4_24 extends BlastWrapper{
 		BufferedWriter stdin = null;
 		BufferedReader stderr = null;
 		
-		BufferedReader stdout = RunCommand.runCommand(this.getBaseProgramsPath() + progranName + " " + "-query " + queryFile + " -db " + dbFile + " " + otherOptions, stdin, stderr);
+		BufferedReader stdout = RunCommand.runCommand(this.getBaseProgramsPath() + progranName + " " + "-query " + queryFile + " -db " + dbFile + " " + otherOptions, stdin, stderr, false);
 		
 		StringBuilder result = new StringBuilder();
 		try {
