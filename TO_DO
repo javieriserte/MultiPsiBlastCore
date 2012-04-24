@@ -1,0 +1,10 @@
+Features To be added:
+1 - Filter for each group of results (i.e. results obtained with the a protein of a genome with several evalues cutoff).
+    Keep one of the identical groups.
+2 - Look for unique protein in each genome.
+3 - Verify that groups of results starting a different genomes are found in other genomes.
+4 - Create a BaculoFilter class and keep results that found proteins shared between 50 to 58 genomes.
+5 - Look for homogeneity of groups. Search the common proteins and the total number of proteins found. May create a graphics to show that.
+6 - Create histograms of positions while performing multipsiblastcore. Keep the query position of each result and graphic it.
+7 - Tree reconstruction.
+8 - Show cores, following a species tree.    
