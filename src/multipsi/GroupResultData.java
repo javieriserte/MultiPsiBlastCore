@@ -36,6 +36,13 @@ public class GroupResultData {
 	
 	//////////////////////
 	// Public Interface
+	
+	@Override
+	public boolean equals(Object other) {
+		if(other==null) return false;
+		if(other.getClass()!= this.getClass())return false;
+		return this.getProteinfound().equals(((GroupResultData)other).getProteinfound());
+	}
 	/**
 	 * Verify that two Groups had the same elements and no others.
 	 * @param other

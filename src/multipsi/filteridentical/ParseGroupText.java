@@ -30,6 +30,7 @@ public class ParseGroupText {
 	public GroupResultData parseline(String line ){
 		
 //		String s = "	With Protein: APO|006 evalue: 0.1 evalue Threshold: 1.0E-8 Found: 26 elements: [MCB|035, LDN|128, TNN|136, HAN|034, HZN|131, SEN|028, XCG|113, SLN|025, EON|121, SF9|026, SF2|027, APO|006, HAG|117, CBN|130, HA4|127, CCN|142, EUN|131, HA1|129, ASN|029, MC4|039, LXN|129, AIN|033, OLN|130, AHN|121, MCN|040, AON|117]".trim();
+		line = line.trim();
 		Pattern p = Pattern.compile("With Protein: (.+) evalue: (.+) evalue Threshold: (.+) Found: (.+) elements: \\[(.+)\\]");
 		Matcher m = p.matcher(line);
 		
