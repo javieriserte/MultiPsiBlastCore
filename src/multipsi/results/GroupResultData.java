@@ -1,4 +1,4 @@
-package multipsi;
+package multipsi.results;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -80,6 +80,10 @@ public class GroupResultData {
 		       " evalue Threshold: " + this.getThEValue()+
 		       " Found: " + this.getElementsFound()+
 		       " elements: "+this.getProteinfound();
+	}
+	
+	public String proteinsFound() {
+		return this.getProteinfound().toString();
 	}
 	
 	///////////////////////

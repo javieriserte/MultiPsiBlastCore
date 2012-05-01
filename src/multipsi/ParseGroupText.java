@@ -1,4 +1,4 @@
-package multipsi.filteridentical;
+package multipsi;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import multipsi.GroupResultData;
+import multipsi.results.GroupResultData;
 
 public class ParseGroupText {
 
