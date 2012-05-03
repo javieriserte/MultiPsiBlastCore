@@ -1,4 +1,4 @@
-package multipsi.filters;
+package multipsi;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,9 +17,14 @@ import cmdGA.exceptions.IncorrectParameterTypeException;
 import cmdGA.parameterType.InFileParameter;
 import cmdGA.parameterType.StringParameter;
 
-import multipsi.ParseGroupText;
 import multipsi.IO.ConfigFileTags;
+import multipsi.IO.ParseGroupText;
 import multipsi.IO.ReadConfigFile;
+import multipsi.filters.FilterByElementsFound;
+import multipsi.filters.FilterIndenticalGroups;
+import multipsi.filters.FilterSingleGroup;
+import multipsi.filters.FilterUniqueSets;
+import multipsi.filters.FilterUniques;
 import multipsi.results.GroupResultData;
 
 public class FilterFiles {
@@ -28,7 +33,7 @@ public class FilterFiles {
 	public static final String MORETHAN50 = "MORETHAN50";
 	public static final String IDENTICAL = "IDENTICAL";
 	public static final String UNIQUE = "UNIQUE";
-	public static final String UNIQUEGROUPS = "uniquegroups";
+	public static final String UNIQUEGROUPS = "UNIQUEGROUPS";
 		
 	
 	
@@ -38,7 +43,7 @@ public class FilterFiles {
 	 */
 	public static void main(String[] args) {
 		args = new String[1];
-		args[0] = "--filter moreThan50 --configfile C:\\JAvier\\JavaWorkspace\\MultiPsiBlastCore\\configFilter.file";
+		args[0] = "--filter uniquegroups --configfile C:\\JAvier\\JavaWorkspace\\MultiPsiBlastCore\\configuniques.file";
 		cmdGA.Parser parser = new cmdGA.Parser();
 		SingleOption configFile = new SingleOption(parser, null, "--configfile", "-cf" , InFileParameter.getParameter());
 		SingleOption filterType = new SingleOption(parser, null, "--filter", StringParameter.getParameter());
@@ -97,7 +102,7 @@ try {   r = ff.readConfigFile((File)configFile.getValue());      } catch (IOExce
 	 */
 	private void filterUniqueGroups(File outputpath, Map<String, File> inputpath) {
 		Iterator<Map.Entry<String, File>> it = inputpath.entrySet().iterator();
-		Set<GroupResultData> result = new TreeSet<GroupResultData>();
+		Set<GroupResultData> result = new HashSet<GroupResultData>();
 		FilterUniqueSets fus = new FilterUniqueSets();
 
 		while(it.hasNext()) {

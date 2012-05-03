@@ -1,4 +1,4 @@
-package multipsi;
+package multipsi.IO;
 
 import java.io.BufferedReader;
 import java.io.File;

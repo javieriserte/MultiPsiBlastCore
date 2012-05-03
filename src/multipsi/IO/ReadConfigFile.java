@@ -42,7 +42,7 @@ public class ReadConfigFile {
 			String[] data = line.split(";");
 			String field = data[0].replaceAll(" ", "").toUpperCase();
 			
-			field = field.replaceAll("[", "").replaceAll("]", "");
+			field = field.replaceAll("\\[", "").replaceAll("\\]", "");
 			ConfigFileTags tag = null;
 			if (this.tagMap.containsKey(field)) tag = this.tagMap.get(field);
 			else throw new IOException("Field Tag not Recognized: "+field);

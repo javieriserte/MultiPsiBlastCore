@@ -4,14 +4,22 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
-import multipsi.ParseGroupText;
+import cmdGA.SingleOption;
+import cmdGA.exceptions.IncorrectParameterTypeException;
+import cmdGA.parameterType.InFileParameter;
+
+import multipsi.FilterFiles;
+import multipsi.MPBCore;
 import multipsi.IO.ConfigFileTags;
-import multipsi.filters.FilterFiles;
+import multipsi.IO.ParseGroupText;
 import multipsi.results.CommonResult;
 import multipsi.results.GroupResultData;
 
@@ -22,11 +30,28 @@ public class KeepCommonSets {
 	
 	public static void main(String[] args)  {
 
+		args = new String[1];
+		args[0] = "--configfile C:\\JAvier\\JavaWorkspace\\MultiPsiBlastCore\\configCommon.file";
+		cmdGA.Parser parser = new cmdGA.Parser();
+		SingleOption configFile = new SingleOption(parser, null, "--configfile", "-cf" , InFileParameter.getParameter());
+		
+		try {
+			parser.parseEx(args);
+		} catch (IncorrectParameterTypeException e) {
+			System.out.println("There was an error while parsing the command line");
+		}
+		
+		if (!configFile.isPresent()) {
+			System.out.println("--configfile option is required");
+		};
+
+		File cfile = (File)configFile.getValue();
 		
 		KeepCommonSets kcs = new KeepCommonSets();
 		FilterFiles ff = new FilterFiles();
 		Map<ConfigFileTags, Object> cf = null;
-try {   cf = ff.readConfigFile(null);         	} catch (IOException e) { e.printStackTrace(); }
+		
+try {   cf = ff.readConfigFile(cfile);         	} catch (IOException e) { e.printStackTrace(); }
 		
 
 		File outpath = (File) cf.get(ConfigFileTags.OutputPath);
@@ -35,7 +60,7 @@ try {   cf = ff.readConfigFile(null);         	} catch (IOException e) { e.print
 		
 		kcs.createDataStructures(paths);
 		
-		Set<CommonResult> result = KeepCommonSets.search(kcs.wanted, kcs.lookFor, outpath);
+		List<CommonResult> result = KeepCommonSets.search(kcs.wanted, kcs.lookFor, outpath);
 		
 		
 		exportFile(new File(outpath+File.separator+"commonsSets.txt"),result);
@@ -48,7 +73,7 @@ try {   cf = ff.readConfigFile(null);         	} catch (IOException e) { e.print
 	 * @param file
 	 * @param group
 	 */
-	protected static void exportFile(File file, Set<CommonResult> group) {
+	protected static void exportFile(File file, List<CommonResult> group) {
 		PrintWriter pw = null;
 		
 		if(!file.exists())
@@ -78,9 +103,9 @@ try {   file.getParentFile().mkdir();
 	 * @param outpath
 	 * @return a set of KeepCommonResult, that contains all groups in wanted with the number of matches they were found.
 	 */
-	private static Set<CommonResult> search(Set<GroupResultData> wanted, Map<String,Set<GroupResultData>> lookFor, File outpath) {
+	private static List<CommonResult> search(Set<GroupResultData> wanted, Map<String,Set<GroupResultData>> lookFor, File outpath) {
 		Iterator<GroupResultData> it = wanted.iterator();
-		Set<CommonResult> result = new HashSet<CommonResult>();
+		List<CommonResult> result = new Vector<CommonResult>();
 		
 		while(it.hasNext()) {
 			result.add(scan(lookFor,it.next()));
@@ -105,17 +130,23 @@ try {   file.getParentFile().mkdir();
 		while(group.hasNext()) {
 			String proteinId = group.next();
 			
-			Set<GroupResultData> others = lookFor.get(proteinId);
+			if (lookFor.containsKey(proteinId)) {
 			
-			for(GroupResultData g : others) {
+				Set<GroupResultData> others = lookFor.get(proteinId);
 				
+				Iterator<GroupResultData> it = others.iterator();
 				
-				if (group.sameProteinsFound(g)) {
-
-					timesfound++;
-
-					others.remove(g);
+				while (it.hasNext()) {
+	
+					GroupResultData g = it.next();
 					
+					if (group.sameProteinsFound(g)) {
+	
+						timesfound++;
+	
+						it.remove();
+						
+					}
 				}
 			}
 			
@@ -132,10 +163,12 @@ try {   file.getParentFile().mkdir();
 	private void createDataStructures(Map<String, File> paths) {
 		ParseGroupText pgt = new ParseGroupText();
 		Iterator<Map.Entry<String,File>> it = paths.entrySet().iterator();
+		this.lookFor = new HashMap<String,Set<GroupResultData>>();
+		this.wanted = new HashSet<GroupResultData>();
 		while (it.hasNext()) {
 			Map.Entry<String,File> e = it.next();
 			
-			String proteinID = e.getKey();
+//			String proteinID = e.getKey();
 			File in = e.getValue();
 			Set<GroupResultData> r = null;
 			
@@ -145,7 +178,7 @@ try {		r = pgt.parse(in);  		} catch (IOException e1) { e1.printStackTrace(); }
 			
 			while (it2.hasNext()) {
 				GroupResultData next = it2.next();
-				this.addDataGroupTo(this.lookFor,proteinID, next);
+				this.addDataGroupTo(this.lookFor,next.getInitialProtein(), next);
 				this.wanted.add(next);
 			}
 		}
