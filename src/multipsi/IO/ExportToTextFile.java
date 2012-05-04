@@ -9,7 +9,7 @@ import java.lang.Iterable;
 
 public class ExportToTextFile {
 
-	public static void ExportObjects(File outfile, Iterable<Object> objects ) {
+	public static void ExportObjects(File outfile, Iterable<? extends Object> objects ) {
 		PrintWriter pw = null;
 		
 		if(!outfile.exists())
@@ -21,7 +21,7 @@ try {   outfile.getParentFile().mkdir();
         pw = new PrintWriter(outfile);          	} catch (FileNotFoundException e) { e.printStackTrace(); } 
                                                       catch (IOException e) { e.printStackTrace(); 	}
 
-		Iterator<Object> it = objects.iterator();
+		Iterator<?> it = objects.iterator();
 		
 		while(it.hasNext()) {
 

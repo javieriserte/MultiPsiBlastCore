@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.Vector;
 
 import cmdGA.SingleOption;
@@ -19,6 +21,7 @@ import cmdGA.parameterType.InFileParameter;
 import multipsi.FilterFiles;
 import multipsi.MPBCore;
 import multipsi.IO.ConfigFileTags;
+import multipsi.IO.ExportToTextFile;
 import multipsi.IO.ParseGroupText;
 import multipsi.results.CommonResult;
 import multipsi.results.GroupResultData;
@@ -60,10 +63,9 @@ try {   cf = ff.readConfigFile(cfile);         	} catch (IOException e) { e.prin
 		
 		kcs.createDataStructures(paths);
 		
-		List<CommonResult> result = KeepCommonSets.search(kcs.wanted, kcs.lookFor, outpath);
+		SortedSet<CommonResult> result = KeepCommonSets.search(kcs.wanted, kcs.lookFor, outpath);
 		
-		
-		exportFile(new File(outpath+File.separator+"commonsSets.txt"),result);
+		ExportToTextFile.ExportObjects(new File(outpath+File.separator+"commonsSets.txt"),result);
 		
 	}
 
@@ -73,42 +75,44 @@ try {   cf = ff.readConfigFile(cfile);         	} catch (IOException e) { e.prin
 	 * @param file
 	 * @param group
 	 */
-	protected static void exportFile(File file, List<CommonResult> group) {
-		PrintWriter pw = null;
-		
-		if(!file.exists())
-
-try {   file.getParentFile().mkdir(); 
-
-	    file.createNewFile();        			
-		
-        pw = new PrintWriter(file);          	} catch (FileNotFoundException e) { e.printStackTrace(); } 
-                                                  catch (IOException e) { e.printStackTrace(); 	}
-
-		Iterator<CommonResult> it = group.iterator();
-		
-		while(it.hasNext()) {
-
-			pw.println(it.next().toString());
-		
-		}
-
-		pw.flush();
-		
-		pw.close();
-	}
+//	protected static void exportFile(File file, Iterable<?> group) {
+//		PrintWriter pw = null;
+//		
+//		if(!file.exists())
+//
+//try {   file.getParentFile().mkdir(); 
+//
+//	    file.createNewFile();        			
+//		
+//        pw = new PrintWriter(file);          	} catch (FileNotFoundException e) { e.printStackTrace(); } 
+//                                                  catch (IOException e) { e.printStackTrace(); 	}
+//
+//		Iterator<?> it = (Iterator<?>) group.iterator();
+//		
+//		while(it.hasNext()) {
+//
+//			pw.println(it.next().toString());
+//		
+//		}
+//
+//		pw.flush();
+//		
+//		pw.close();
+//	}
 
 	/**
 	 * Searches for each group in wanted to be present in looker for dictionary. 
 	 * @param outpath
 	 * @return a set of KeepCommonResult, that contains all groups in wanted with the number of matches they were found.
 	 */
-	private static List<CommonResult> search(Set<GroupResultData> wanted, Map<String,Set<GroupResultData>> lookFor, File outpath) {
+	private static SortedSet<CommonResult> search(Set<GroupResultData> wanted, Map<String,Set<GroupResultData>> lookFor, File outpath) {
 		Iterator<GroupResultData> it = wanted.iterator();
-		List<CommonResult> result = new Vector<CommonResult>();
+		SortedSet<CommonResult> result = new TreeSet<CommonResult>();
 		
 		while(it.hasNext()) {
-			result.add(scan(lookFor,it.next()));
+			
+			CommonResult scan = scan(lookFor,it.next());
+			if (scan.getTimesfound()>0) result.add(scan);
 		}
 		
 		return result;
